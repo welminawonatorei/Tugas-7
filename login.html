@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masuk — Dapur Papua Rasa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+<div class="auth-page">
+  <!-- KIRI: Branding -->
+  <div class="auth-left">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="auth-left-content">
+      <div class="brand-icon">🍴</div>
+      <div class="brand-name">Dapur Papua Rasa</div>
+      <div class="brand-tagline">Premium · Papua Food</div>
+      <div class="features">
+        <div class="feat"><span class="feat-icon">🍛</span><span>35+ Menu Papua Rasa</span></div>
+        <div class="feat"><span class="feat-icon">🚀</span><span>Pesan cepat via WhatsApp</span></div>
+        <div class="feat"><span class="feat-icon">⭐</span><span>Rating 4.9 dari 2.500+ pelanggan</span></div>
+        <div class="feat"><span class="feat-icon">🎁</span><span>Promo eksklusif member setiap hari</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KANAN: Form Login -->
+  <div class="auth-right">
+    <div class="mobile-logo">
+      <div class="mobile-logo-icon">🍴</div>
+      <div class="mobile-logo-name">Dapur Papua Rasa</div>
+    </div>
+
+    <div class="form-card">
+      <h1 class="form-title">Selamat Datang! 👋</h1>
+      <p class="form-sub">Masuk ke akun Anda untuk melihat menu dan memesan</p>
+
+      <!-- Pesan error -->
+      <div class="alert alert-err" id="loginErr">⚠️ <span id="loginErrMsg">Email atau password salah.</span></div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <div class="input-wrap">
+          <span class="input-icon">📧</span>
+          <input class="form-input" type="email" id="loginEmail" placeholder="contoh@email.com" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input class="form-input" type="password" id="loginPass" placeholder="Masukkan password"
+                 style="padding-right:42px" autocomplete="current-password">
+          <button class="input-eye" id="loginEye" type="button">👁️</button>
+        </div>
+        <div class="link-row">
+          <div></div>
+          <a href="forgot-password.html" class="text-link">Lupa password?</a>
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" class="cb" id="rememberMe">
+        <label class="cb-label" for="rememberMe">Ingat saya di perangkat ini</label>
+      </div>
+
+      <button class="btn-main" id="btnLogin" type="button">🚀 Masuk Sekarang</button>
+
+      <div class="divider">belum punya akun?</div>
+      <div class="switch-row">
+        <a href="register.html" class="text-link" style="font-size:14px">✨ Buat Akun Gratis →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+
+  // Jika sudah login, langsung ke halaman utama
+  redirectIfLoggedIn();
+
+  // Toggle lihat/sembunyikan password
+  eyeToggle('loginPass', 'loginEye');
+
+  // Tekan Enter di kolom password = klik tombol masuk
+  document.getElementById('loginPass').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('btnLogin').click();
+  });
+
+  // Tombol Masuk
+  document.getElementById('btnLogin').addEventListener('click', function() {
+    hideErr('loginErr');
+
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const pass  = document.getElementById('loginPass').value;
+
+    // Validasi tidak boleh kosong
+    if (!email || !pass) {
+      showErr('loginErr', 'Isi email dan password terlebih dahulu.');
+      return;
+    }
+
+    // Cari akun yang cocok
+    const users = getUsers();
+    const user  = users.find(function(u) {
+      return u.email === email && u.password === pass;
+    });
+
+    if (!user) {
+      showErr('loginErr', 'Email atau password salah. Coba lagi.');
+      return;
+    }
+
+    // Simpan sesi login
+    setCurrentUser(user);
+
+    // Pindah ke halaman utama
+    window.location.href = 'index.html';
+  });
+
+</script>
+</body>
+</html>

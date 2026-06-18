@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar Akun — Dapur Papua Rasa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+<div class="auth-page">
+  <!-- KIRI: Branding -->
+  <div class="auth-left">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="auth-left-content">
+      <div class="brand-icon">🍴</div>
+      <div class="brand-name">Dapur Papua Rasa</div>
+      <div class="brand-tagline">Premium · Papua Food</div>
+      <div class="features">
+        <div class="feat"><span class="feat-icon">🍛</span><span>35+ Menu Papua Rasa</span></div>
+        <div class="feat"><span class="feat-icon">🚀</span><span>Pesan cepat via WhatsApp</span></div>
+        <div class="feat"><span class="feat-icon">⭐</span><span>Rating 4.9 dari 2.500+ pelanggan</span></div>
+        <div class="feat"><span class="feat-icon">🎁</span><span>Promo eksklusif member setiap hari</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KANAN: Form Daftar -->
+  <div class="auth-right">
+    <div class="mobile-logo">
+      <div class="mobile-logo-icon">🍴</div>
+      <div class="mobile-logo-name">Dapur Papua Rasa</div>
+    </div>
+
+    <div class="form-card">
+      <h1 class="form-title">Buat Akun ✨</h1>
+      <p class="form-sub">Daftar gratis dan nikmati promo eksklusif member!</p>
+
+      <!-- Pesan error -->
+      <div class="alert alert-err" id="regErr">⚠️ <span id="regErrMsg">Terjadi kesalahan.</span></div>
+      <!-- Pesan sukses -->
+      <div class="alert alert-ok"  id="regOk">✅ <span>Akun berhasil dibuat! Mengalihkan...</span></div>
+
+      <div class="form-group">
+        <label class="form-label">Nama Lengkap</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input class="form-input" type="text" id="regName" placeholder="Nama lengkap Anda" autocomplete="name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <div class="input-wrap">
+          <span class="input-icon">📧</span>
+          <input class="form-input" type="email" id="regEmail" placeholder="contoh@email.com" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nomor HP</label>
+        <div class="input-wrap">
+          <span class="input-icon">📱</span>
+          <input class="form-input" type="tel" id="regPhone" placeholder="08xx-xxxx-xxxx" autocomplete="tel">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input class="form-input" type="password" id="regPass" placeholder="Min. 8 karakter"
+                 style="padding-right:42px" autocomplete="new-password"
+                 oninput="handleStrength(this.value)">
+          <button class="input-eye" id="regEye" type="button">👁️</button>
+        </div>
+        <div class="strength-bar-wrap"><div class="strength-bar" id="strBar"></div></div>
+        <div class="strength-text" id="strTxt"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Konfirmasi Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔑</span>
+          <input class="form-input" type="password" id="regPassC" placeholder="Ulangi password"
+                 style="padding-right:42px" autocomplete="new-password">
+          <button class="input-eye" id="regEyeC" type="button">👁️</button>
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" class="cb" id="agreeTerms">
+        <label class="cb-label" for="agreeTerms">
+          Saya setuju dengan <a href="#" class="text-link">Syarat &amp; Ketentuan</a>
+          dan <a href="#" class="text-link">Kebijakan Privasi</a>
+        </label>
+      </div>
+
+      <button class="btn-main" id="btnRegister" type="button">🎉 Buat Akun Sekarang</button>
+
+      <div class="divider">sudah punya akun?</div>
+      <div class="switch-row">
+        <a href="login.html" class="text-link" style="font-size:14px">← Masuk ke akun</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Load auth.js lebih dulu sebelum script ini berjalan -->
+<script src="auth.js"></script>
+<script>
+
+  // Jika sudah login, langsung ke halaman utama
+  redirectIfLoggedIn();
+
+  // Toggle lihat/sembunyikan password
+  eyeToggle('regPass',  'regEye');
+  eyeToggle('regPassC', 'regEyeC');
+
+  // Tampilkan indikator kekuatan password
+  function handleStrength(val) {
+    const s   = calcStrength(val);
+    const bar = document.getElementById('strBar');
+    const txt = document.getElementById('strTxt');
+    bar.style.width      = s.width;
+    bar.style.background = s.color;
+    txt.textContent      = s.label;
+    txt.style.color      = s.color;
+  }
+
+  // Tombol Daftar
+  document.getElementById('btnRegister').addEventListener('click', function() {
+    hideErr('regErr');
+    hideOk('regOk');
+
+    const name  = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+    const phone = document.getElementById('regPhone').value.trim();
+    const pass  = document.getElementById('regPass').value;
+    const passC = document.getElementById('regPassC').value;
+    const agree = document.getElementById('agreeTerms').checked;
+
+    // Validasi input
+    if (!name || !email || !phone || !pass || !passC) {
+      showErr('regErr', 'Semua kolom wajib diisi.');
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      showErr('regErr', 'Format email tidak valid.');
+      return;
+    }
+    if (pass.length < 8) {
+      showErr('regErr', 'Password minimal 8 karakter.');
+      return;
+    }
+    if (pass !== passC) {
+      showErr('regErr', 'Konfirmasi password tidak cocok.');
+      return;
+    }
+    if (!agree) {
+      showErr('regErr', 'Anda harus menyetujui syarat & ketentuan.');
+      return;
+    }
+
+    // Cek apakah email sudah terdaftar
+    const users = getUsers();
+    if (users.find(function(u) { return u.email === email; })) {
+      showErr('regErr', 'Email ini sudah terdaftar. Silakan masuk.');
+      return;
+    }
+
+    // Simpan akun baru
+    const newUser = {
+      name:      name,
+      email:     email,
+      phone:     phone,
+      password:  pass,
+      createdAt: new Date().toISOString()
+    };
+    users.push(newUser);
+    saveUsers(users);
+
+    // Simpan sesi login
+    setCurrentUser(newUser);
+
+    // Tampilkan pesan sukses lalu pindah ke halaman utama
+    showOk('regOk');
+    setTimeout(function() {
+      window.location.href = 'index.html';
+    }, 1000);
+  });
+
+</script>
+</body>
+</html>
